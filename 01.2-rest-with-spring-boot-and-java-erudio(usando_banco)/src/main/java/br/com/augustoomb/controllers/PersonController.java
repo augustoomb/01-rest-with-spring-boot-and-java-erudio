@@ -1,7 +1,8 @@
 package br.com.augustoomb.controllers;
 
+import br.com.augustoomb.data.dto.v1.PersonDTO;
+import br.com.augustoomb.data.dto.v2.PersonDTOV2;
 import br.com.augustoomb.services.PersonServices;
-import br.com.augustoomb.model.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,31 +14,37 @@ import java.util.List;
 @RequestMapping("/person")
 public class PersonController {
 
-    // JÁ QUE O PERSONSERVICE ESTÁ ANOTADO COMO @Service, ELE ME PERMITE USAR SEM O new...
+    // JÁ QUE O PERSONSERVICE ESTÁ ANOTADO COMO @Service(lá no arquivo dele), ELE ME PERMITE USAR AQUI SEM O new...
     // ISSO É O USO DE INJEÇÃO DE DEPENDÊNCIAS...
     @Autowired // ..COM ISSO(Autowired), O SPRING BOOT USA A INJEÇÃO DE DEPENDÊNCIAS E INSTANCIA SOMENTE QUANDO FOR NECESSÁRIO
     private PersonServices service;
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Person findById(@PathVariable("id") Long id) {
+    public PersonDTO findById(@PathVariable("id") Long id) {
 
         return service.findById(id);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Person> findAll() {
+    public List<PersonDTO> findAll() {
 
         return service.findAll();
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Person create(@RequestBody Person person) {
+    public PersonDTO create(@RequestBody PersonDTO person) {
 
         return service.create(person);
     }
 
+    @PostMapping(value = "/v2", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public PersonDTOV2 create(@RequestBody PersonDTOV2 person) {
+
+        return service.createV2(person);
+    }
+
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Person update(@RequestBody Person person) {
+    public PersonDTO update(@RequestBody PersonDTO person) {
 
         return service.update(person);
     }
