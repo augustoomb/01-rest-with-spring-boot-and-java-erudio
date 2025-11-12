@@ -3,6 +3,7 @@ package br.com.augustoomb.data.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.springframework.hateoas.RepresentationModel; // PARA USAR HATEOAS
 
 import java.io.Serializable;
 import java.util.Date;
@@ -10,7 +11,7 @@ import java.util.Objects;
 
 // @JsonPropertyOrder({"id", "address", "first_name", "last_name", "gender"})
 //@JsonFilter("PersonFilter") // USA O FILTER CRIADO EM config/ObjectMapperConfig. Na prática, o atributo "sensitiveData" não vai aparecer na resposta da API
-public class PersonDTO implements Serializable {
+public class PersonDTO extends RepresentationModel<PersonDTO> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
