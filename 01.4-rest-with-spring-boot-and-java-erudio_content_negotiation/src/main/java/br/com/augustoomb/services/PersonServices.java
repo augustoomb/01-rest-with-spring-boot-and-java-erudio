@@ -20,7 +20,6 @@ import java.util.List;
 @Service // FAZ O PersonServices FICAR DISPONÍVEL E PODER SER INJETADO ONDE FOR PRECISO (INJEÇÃO DE DEPENDÊNCIAS)
 public class PersonServices {
 
-//    private final AtomicLong counter = new AtomicLong();
     private Logger logger = LoggerFactory.getLogger(PersonServices.class.getName());
 
     @Autowired
