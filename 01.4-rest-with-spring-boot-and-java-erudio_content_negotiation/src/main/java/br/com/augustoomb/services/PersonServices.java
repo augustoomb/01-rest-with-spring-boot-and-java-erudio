@@ -2,6 +2,7 @@ package br.com.augustoomb.services;
 
 import br.com.augustoomb.controllers.PersonController;
 import br.com.augustoomb.data.dto.PersonDTO;
+import br.com.augustoomb.exception.RequiredObjectIsNullException;
 import br.com.augustoomb.exception.ResourceNotFoundException;
 import static br.com.augustoomb.mapper.ObjectMapper.parseListObjects;
 import static br.com.augustoomb.mapper.ObjectMapper.parseObject;
@@ -55,6 +56,9 @@ public class PersonServices {
 
 
     public PersonDTO create(PersonDTO person) {
+
+        if(person == null) throw new RequiredObjectIsNullException();
+
         logger.info("Creating one person!");
 
         var entity = parseObject(person, Person.class);
@@ -68,6 +72,9 @@ public class PersonServices {
     }
 
     public PersonDTO update(PersonDTO person) {
+
+        if(person == null) throw new RequiredObjectIsNullException();
+
         logger.info("Updating one person!");
 
         Person entity = repository.findById(person.getId())
