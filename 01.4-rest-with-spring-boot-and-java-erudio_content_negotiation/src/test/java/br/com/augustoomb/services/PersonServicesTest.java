@@ -61,6 +61,9 @@ class PersonServicesTest {
         assertNotNull(result.getId());
         assertNotNull(result.getLinks());
 
+        // MEU TESTE
+        assertEquals(1L, result.getId());
+
 
 
 

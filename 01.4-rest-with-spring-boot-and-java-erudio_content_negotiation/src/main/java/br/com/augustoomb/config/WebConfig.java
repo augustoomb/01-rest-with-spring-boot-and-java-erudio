@@ -6,7 +6,7 @@ import org.springframework.web.servlet.config.annotation.ContentNegotiationConfi
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 // VOU USAR NO CONTROLLER - SETAR NO "MediaType" das rotas
-// USADA A LIB fasterxml
+// USADA A LIB fasterxml, que é usado para retornar formatos diferentes do JSON padrão
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {

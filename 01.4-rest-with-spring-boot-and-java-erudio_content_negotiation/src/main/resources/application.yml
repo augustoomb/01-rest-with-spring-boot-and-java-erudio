@@ -5,7 +5,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/rest_with_spring_boot?useTimezone=true&serverTimezone=UTC
     username: root
-    password: W+Qq4+6yTB&Nl3uuIo
+    password: 1j86Ffcg1sn0lf5782
   jpa:
     hibernate:
       ddl-auto: none
@@ -24,3 +24,10 @@ spring:
       # OPÇÕES SÃO: TRACE, DEBUG(IDEAL PARA DEV, SE PRECISAR VERIFICAR), INFO(PADRÃO), WARM(IDEAL PRODUÇÃO), ERROR
       # AS OPÇÕES SÃO NÍVEIS, OU SEJA, TRACE PEGA TODOS OS OUTROS, DEBUG PEGA DELE ATÉ ERROR, ETC
       # LEMBRANDO QUE QUANTO MAIS PRA "BAIXO", MAIS RECURSOS SÃO GASTOS (TRACE GASTA MAIS)
+
+
+  # O QUE O SWAGGER TERÁ ACESSO PARA GERAR A DOC:
+  spring-doc:
+    paths-to-match: /api/**/v1/**
+    swagger-ui:
+      use-root-path: true
