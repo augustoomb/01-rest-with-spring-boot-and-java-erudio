@@ -3,7 +3,6 @@ package br.com.augustoomb.services;
 import br.com.augustoomb.data.dto.BookDTO;
 import br.com.augustoomb.model.Book;
 import br.com.augustoomb.repository.BookRepository;
-import br.com.augustoomb.repository.PersonRepository;
 import br.com.augustoomb.unitetests.mapper.mocks.MockBooks;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
