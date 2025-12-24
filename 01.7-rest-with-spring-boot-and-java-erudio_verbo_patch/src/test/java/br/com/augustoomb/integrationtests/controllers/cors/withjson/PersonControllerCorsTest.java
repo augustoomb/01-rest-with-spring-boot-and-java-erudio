@@ -1,4 +1,4 @@
-package br.com.augustoomb.integrationtests.controllers.withjson;
+package br.com.augustoomb.integrationtests.controllers.cors.withjson;
 
 import br.com.augustoomb.config.TestConfigs;
 import br.com.augustoomb.integrationtests.dto.PersonDTO;
@@ -20,19 +20,18 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class) // POR PADRÃO, OS TESTER RODAM EM ORDEM ALEATÓRIA. SETANDO AQUI, FALO QUE VOU COLOCAR UMA ORDEM
-class PersonControllerTest extends AbstractIntegrationTest {
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+class PersonControllerCorsTest extends AbstractIntegrationTest {
 
     private static RequestSpecification specification;
     private static ObjectMapper objectMapper;
 
     private static PersonDTO person;
 
-
     @BeforeAll
     static void setUp() {
         objectMapper = new ObjectMapper();
-        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES); // IGNORA ATRIBUTOS DESCONHECIDOS RETORNADOS. PRECISO DISSO POIS ESTOU RECEBENDO INFORMAÇÕES DE HATEOAS, QUE DARIAM ERRO AQUI NO TESTE
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
         person = new PersonDTO();
     }
@@ -43,28 +42,26 @@ class PersonControllerTest extends AbstractIntegrationTest {
         mockPerson();
 
         specification = new RequestSpecBuilder()
-            .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_ERUDIO)
+                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_ERUDIO)
                 .setBasePath("/api/person/v1")
                 .setPort(TestConfigs.SERVER_PORT)
                 .addFilter(new RequestLoggingFilter(LogDetail.ALL))
                 .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
                 .build();
 
-
-        var content = given(specification) // DADA ..
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
+        var content = given(specification)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(person)
-            .when() // ... QUANDO
-                .post() //
-            .then() // ... ENTÃO EU ESPERO
-                .statusCode(200) // .. UM STATUS CODE 200
-            .extract() // E EXTRAIO
-                .body() // O CONTEÚDO DO BODY
-                    .asString(); // COMO UMA STRING
+                .when()
+                .post()
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .asString();
 
-        PersonDTO createdPerson = objectMapper.readValue(content, PersonDTO.class); // usado para transformar a resposta da API (que chega como texto/JSON) de volta em um objeto Java (PersonDTO) para que você possa fazer as validações (assertions).
+        PersonDTO createdPerson = objectMapper.readValue(content, PersonDTO.class);
         person = createdPerson;
-
 
         assertNotNull(createdPerson.getId());
         assertNotNull(createdPerson.getFirstName());
@@ -76,8 +73,10 @@ class PersonControllerTest extends AbstractIntegrationTest {
 
         assertEquals("Richard", createdPerson.getFirstName());
         assertEquals("Stallman", createdPerson.getLastName());
-        assertEquals("New York City", createdPerson.getAddress());
+        assertEquals("New York City - New York - USA", createdPerson.getAddress());
         assertEquals("Male", createdPerson.getGender());
+        assertTrue(createdPerson.getEnabled());
+
     }
 
     @Test
@@ -92,20 +91,19 @@ class PersonControllerTest extends AbstractIntegrationTest {
                 .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
                 .build();
 
-
-        var content = given(specification) // DADA ..
+        var content = given(specification)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(person)
-                .when() // ... QUANDO
-                .post() //
-                .then() // ... ENTÃO EU ESPERO
-                .statusCode(403) // .. UM STATUS CODE 403
-                .extract() // E EXTRAIO
-                .body() // O CONTEÚDO DO BODY
-                .asString(); // COMO UMA STRING
-
+                .when()
+                .post()
+                .then()
+                .statusCode(403)
+                .extract()
+                .body()
+                .asString();
 
         assertEquals("Invalid CORS request", content);
+
     }
 
     @Test
@@ -119,19 +117,18 @@ class PersonControllerTest extends AbstractIntegrationTest {
                 .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
                 .build();
 
-
-        var content = given(specification) // DADA ..
+        var content = given(specification)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .pathParam("id", person.getId())
-                .when() // ... QUANDO
-                .get("{id}") //
-                .then() // ... ENTÃO EU ESPERO
-                .statusCode(200) // .. UM STATUS CODE 200
-                .extract() // E EXTRAIO
-                .body() // O CONTEÚDO DO BODY
-                .asString(); // COMO UMA STRING
+                .when()
+                .get("{id}")
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .asString();
 
-        PersonDTO createdPerson = objectMapper.readValue(content, PersonDTO.class); // usado para transformar a resposta da API (que chega como texto/JSON) de volta em um objeto Java (PersonDTO) para que você possa fazer as validações (assertions).
+        PersonDTO createdPerson = objectMapper.readValue(content, PersonDTO.class);
         person = createdPerson;
 
         assertNotNull(createdPerson.getId());
@@ -144,10 +141,10 @@ class PersonControllerTest extends AbstractIntegrationTest {
 
         assertEquals("Richard", createdPerson.getFirstName());
         assertEquals("Stallman", createdPerson.getLastName());
-        assertEquals("New York City", createdPerson.getAddress());
+        assertEquals("New York City - New York - USA", createdPerson.getAddress());
         assertEquals("Male", createdPerson.getGender());
+        assertTrue(createdPerson.getEnabled());
     }
-
     @Test
     @Order(4)
     void findByIdWithWrongOrigin() throws JsonProcessingException {
@@ -159,18 +156,16 @@ class PersonControllerTest extends AbstractIntegrationTest {
                 .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
                 .build();
 
-
-        var content = given(specification) // DADA ..
+        var content = given(specification)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .pathParam("id", person.getId())
-                .when() // ... QUANDO
-                .get("{id}") //
-                .then() // ... ENTÃO EU ESPERO
-                .statusCode(403) // .. UM STATUS CODE 200
-                .extract() // E EXTRAIO
-                .body() // O CONTEÚDO DO BODY
-                .asString(); // COMO UMA STRING
-
+                .when()
+                .get("{id}")
+                .then()
+                .statusCode(403)
+                .extract()
+                .body()
+                .asString();
 
         assertEquals("Invalid CORS request", content);
     }
@@ -178,7 +173,8 @@ class PersonControllerTest extends AbstractIntegrationTest {
     private void mockPerson() {
         person.setFirstName("Richard");
         person.setLastName("Stallman");
-        person.setAddress("New York City");
+        person.setAddress("New York City - New York - USA");
         person.setGender("Male");
+        person.setEnabled(true);
     }
 }

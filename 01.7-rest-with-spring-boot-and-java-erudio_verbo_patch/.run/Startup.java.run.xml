@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Startup.java" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="br.com.augustoomb.Startup" />
+    <module name="01-rest-with-spring-boot-and-java-erudio" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
