@@ -1,4 +1,4 @@
-package br.com.augustoomb.integrationtests.controllers.withjson;
+package br.com.augustoomb.integrationtests.controllers.withxml;
 
 import br.com.augustoomb.config.TestConfigs;
 import br.com.augustoomb.integrationtests.dto.PersonDTO;
@@ -6,7 +6,7 @@ import br.com.augustoomb.integrationtests.testcontainers.AbstractIntegrationTest
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.filter.log.RequestLoggingFilter;
@@ -24,17 +24,17 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class) // POR PADRÃO, OS TESTER RODAM EM ORDEM ALEATÓRIA. SETANDO AQUI, FALO QUE VOU COLOCAR UMA ORDEM
-class PersonControllerJsonTest extends AbstractIntegrationTest {
+class PersonControllerXmlTest extends AbstractIntegrationTest {
 
     private static RequestSpecification specification; // Como ela é estática, ela sobrevive à "destruição" da instância do teste anterior e mantém o valor atribuído na memória durante toda a execução daquela classe de teste.
-    private static ObjectMapper objectMapper;
+    private static XmlMapper objectMapper;
 
     private static PersonDTO person;
 
 
     @BeforeAll
     static void setUp() {
-        objectMapper = new ObjectMapper();
+        objectMapper = new XmlMapper();
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES); // IGNORA ATRIBUTOS DESCONHECIDOS RETORNADOS. PRECISO DISSO POIS ESTOU RECEBENDO INFORMAÇÕES DE HATEOAS, QUE DARIAM ERRO AQUI NO TESTE
 
         person = new PersonDTO();
@@ -55,18 +55,19 @@ class PersonControllerJsonTest extends AbstractIntegrationTest {
 
 
         var content = given(specification) // DADA ..
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .contentType(MediaType.APPLICATION_XML_VALUE)
+                .accept(MediaType.APPLICATION_XML_VALUE)
                 .body(person)
-            .when() // ... QUANDO
+                .when() // ... QUANDO
                 .post() //
             .then() // ... ENTÃO EU ESPERO
                 .statusCode(200) // .. UM STATUS CODE 200
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_XML_VALUE)
             .extract() // E EXTRAIO
                 .body() // O CONTEÚDO DO BODY
                     .asString(); // COMO UMA STRING
 
-        PersonDTO createdPerson = objectMapper.readValue(content, PersonDTO.class); // usado para transformar a resposta da API (que chega como texto/JSON) de volta em um objeto Java (PersonDTO) para que você possa fazer as validações (assertions).
+        PersonDTO createdPerson = objectMapper.readValue(content, PersonDTO.class);
         person = createdPerson;
 
         assertNotNull(createdPerson.getId());
@@ -85,13 +86,14 @@ class PersonControllerJsonTest extends AbstractIntegrationTest {
         person.setLastName("Benedict Torvalds");
 
         var content = given(specification)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_XML_VALUE)
+                .accept(MediaType.APPLICATION_XML_VALUE)
                 .body(person)
                 .when()
                 .put()
                 .then()
                 .statusCode(200)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_XML_VALUE)
                 .extract()
                 .body()
                 .asString();
@@ -101,6 +103,7 @@ class PersonControllerJsonTest extends AbstractIntegrationTest {
 
 
         assertNotNull(createdPerson.getId());
+
         assertTrue(createdPerson.getId() > 0);
 
         assertEquals("Linus", createdPerson.getFirstName());
@@ -114,14 +117,16 @@ class PersonControllerJsonTest extends AbstractIntegrationTest {
     @Order(3)
     void findByIdTest() throws JsonProcessingException {
 
+
         var content = given(specification) // DADA ..
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_XML_VALUE)
+                .accept(MediaType.APPLICATION_XML_VALUE)
                 .pathParam("id", person.getId())
                 .when() // ... QUANDO
                 .get("{id}") //
                 .then() // ... ENTÃO EU ESPERO
                 .statusCode(200) // .. UM STATUS CODE 200
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_XML_VALUE)
                 .extract() // E EXTRAIO
                 .body() // O CONTEÚDO DO BODY
                 .asString(); // COMO UMA STRING
@@ -144,13 +149,13 @@ class PersonControllerJsonTest extends AbstractIntegrationTest {
     void disableTest() throws JsonProcessingException {
 
         var content = given(specification)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_XML_VALUE)
                 .pathParam("id", person.getId())
                 .when()
                 .patch("{id}")
                 .then()
                 .statusCode(200)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_XML_VALUE)
                 .extract()
                 .body()
                 .asString();
@@ -186,12 +191,12 @@ class PersonControllerJsonTest extends AbstractIntegrationTest {
     void findAllTest() throws JsonProcessingException {
 
         var content = given(specification)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_XML_VALUE)
                 .when()
                 .get()
                 .then()
                 .statusCode(200)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_XML_VALUE)
                 .extract()
                 .body()
                 .asString();

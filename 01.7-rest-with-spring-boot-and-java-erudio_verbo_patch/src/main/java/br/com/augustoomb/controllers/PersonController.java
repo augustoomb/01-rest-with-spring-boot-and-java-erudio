@@ -43,7 +43,7 @@ public class PersonController {
                     array = @ArraySchema(schema = @Schema(implementation = PersonDTO.class))
             )
     )
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE } )
     public List<PersonDTO> findAll() {
         return service.findAll();
     }
@@ -57,7 +57,7 @@ public class PersonController {
             description = "Success",
             content = @Content(schema = @Schema(implementation = PersonDTO.class))
     )
-    @GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE })
     public PersonDTO findById(@PathVariable("id") Long id) {
         return service.findById(id);
     }
@@ -71,7 +71,7 @@ public class PersonController {
             description = "Success",
             content = @Content(schema = @Schema(implementation = PersonDTO.class))
     )
-    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE })
     public PersonDTO create(@RequestBody PersonDTO Person) {
         return service.create(Person);
     }
@@ -84,13 +84,13 @@ public class PersonController {
             description = "Success",
             content = @Content(schema = @Schema(implementation = PersonDTO.class))
     )
-    @PutMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PutMapping(consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE })
     public PersonDTO update(@RequestBody PersonDTO Person) {
         return service.update(Person);
     }
 
     // DELETE
-    @Operation(summary = "Add a new Person", description = "Add a new Person")
+    @Operation(summary = "Delete Person", description = "Delete Person")
     @DefaultApiResponses
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
@@ -101,7 +101,7 @@ public class PersonController {
     // DISABLE A PERSON
     @Operation(summary = "Disable a Person", description = "Disable a Person")
     @DefaultApiResponses
-    @PatchMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PatchMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE})
 //    @DeleteMapping(value = "/{id}")
     public PersonDTO disablePerson(@PathVariable("id") Long id) {
         return service.disablePerson(id);

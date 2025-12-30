@@ -34,7 +34,7 @@ public class BookController {
                     array = @ArraySchema(schema = @Schema(implementation = BookDTO.class))
             )
     )
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE} )
     public List<BookDTO> findAll() {
         return service.findAll();
     }
@@ -47,7 +47,7 @@ public class BookController {
             description = "Success",
             content = @Content(schema = @Schema(implementation = BookDTO.class))
     )
-    @GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE})
     public BookDTO findById(@PathVariable("id") Long id) {
         return service.findById(id);
     }
@@ -60,7 +60,7 @@ public class BookController {
             description = "Success",
             content = @Content(schema = @Schema(implementation = BookDTO.class))
     )
-    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE}, produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE})
     public BookDTO create(@RequestBody BookDTO book) {
         return service.create(book);
     }
@@ -73,7 +73,7 @@ public class BookController {
             description = "Success",
             content = @Content(schema = @Schema(implementation = BookDTO.class))
     )
-    @PutMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PutMapping(consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE}, produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE})
     public BookDTO update(@RequestBody BookDTO book) {
         return service.update(book);
     }
